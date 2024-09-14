@@ -40,6 +40,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //密码比对
         // TODO 后期需要进行md5加密，然后再进行比对
+        // MD5 是一种 不可逆的哈希算法，即没有直接的 "逆操作" 来还原被哈希的原始字符串。
+        // 这是因为哈希算法的设计目标之一就是单向性，输入经过哈希算法后得到的输出应该无法轻易还原成原来的输入。
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!password.equals(employee.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
