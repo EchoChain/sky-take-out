@@ -8,7 +8,7 @@
         values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{createTime}, #{updateTime}, #{createUser} ,#{updateUser})
     </insert>
     <select id="pageQuery" resultType="com.sky.vo.DishVO">
-        select d.* , c.name
+        select d.* , c.name as categoryName
         from dish d left join category c on d.category_id = c.id
         <where>
             <if test="name != null">
