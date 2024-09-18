@@ -20,13 +20,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-@Component
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Slf4j
 public class AliOSSUtil {
-    @Autowired
+
     private AliOssProperties aliOssProperties;
 
     public String upload(MultipartFile multipartFile){
