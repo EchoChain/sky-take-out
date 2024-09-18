@@ -8,6 +8,7 @@ import org.apache.poi.ss.formula.constant.ErrorConstant;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
@@ -22,13 +23,13 @@ public class GlobalExceptionHandler {
      * @param ex
      * @return
      */
-    @ExceptionHandler
-    public Result exceptionHandler(SQLIntegrityConstraintViolationException ex){
-        log.error("异常信息：{}", ex.getMessage());
+    @ExceptionHandler(SQLException.class)
+    public Result<String> sqlExceptionHandler(SQLException ex){
+        log.error("SQL Exception: {}", ex.getMessage());
 
-        // msg:Duplicate entry 'zhangsan' for key 'employee.idx_username'
-        String message = ex.getMessage();
-        if (message.contains("Duplicate entry")) {
+        if (ex instanceof SQLIntegrityConstraintViolationException) {
+            // msg:Duplicate entry 'zhangsan' for key 'employee.idx_username'
+            String message = ex.getMessage();
             String[] split = message.split(" ");
             String user = split[2];
             return Result.error(user + MessageConstant.ALREADY_EXISTS);
