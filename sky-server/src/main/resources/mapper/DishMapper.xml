@@ -12,7 +12,7 @@
         from dish d left join category c on d.category_id = c.id
         <where>
             <if test="name != null">
-                name like concat('%', #{name}, '%')
+                d.name like concat('%', #{name}, '%')
             </if>
             <if test="categoryId != null">
                 and category_id = #{categoryId}
