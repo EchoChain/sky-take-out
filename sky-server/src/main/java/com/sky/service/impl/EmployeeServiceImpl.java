@@ -131,7 +131,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
-/*      采用aop自动填充基础字段
+/*      使用 aop 填充基础字段
         employee.setUpdateTime(LocalDateTime.now());
         employee.setUpdateUser(BaseContext.getCurrentId());*/
         employeeMapper.update(employee);
