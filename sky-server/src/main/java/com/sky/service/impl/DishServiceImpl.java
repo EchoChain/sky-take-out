@@ -42,10 +42,10 @@ public class DishServiceImpl implements DishService {
         dishMapper.insert(dish);
         Long dishId = dish.getId();  // 由于 mapper 设置了主键返回 插入后 dish 能获取到 id
 
-        if (flavors != null && !flavors.isEmpty())
+        if (flavors != null && !flavors.isEmpty()) {
             flavors.forEach(flavor -> flavor.setDishId(dishId));    // 用 for 循环将每个口味的 dishId 都进行设置
-
-        dishFlavorMapper.insertBatch(flavors);
+            dishFlavorMapper.insertBatch(flavors);
+        }
     }
 
     @Override
