@@ -18,4 +18,6 @@ public interface SetmealService {
     void save(SetmealDTO setmealDTO);
     PageResult<SetmealVO> page(SetmealPageQueryDTO setmealPageQueryDTO);
     void deleteWithDish(List<Long> ids);
+    SetmealVO getById(Long id);
+    void update(SetmealDTO setmealDTO);
 }

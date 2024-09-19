@@ -9,6 +9,7 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.entity.Setmeal;
+import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
@@ -69,8 +70,8 @@ public class DishServiceImpl implements DishService {
             Dish dish = dishMapper.getById(id);
             if (dish.getStatus() == StatusConstant.ENABLE)
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
-            Setmeal setmeal = setmealDishMapper.getByDishId(id);
-            if (setmeal != null)
+            List<SetmealDish> setmeal = setmealDishMapper.getByDishId(id);
+            if (setmeal != null && !setmeal.isEmpty())
                 throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         }
         dishMapper.deleteBatch(ids);

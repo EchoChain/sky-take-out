@@ -41,4 +41,16 @@ public class SetmealController {
         setmealService.deleteWithDish(ids);
         return Result.success();
     }
+
+    @GetMapping("/{id}")
+    public Result<SetmealVO> getById(@PathVariable Long id) {
+        SetmealVO setmealVO = setmealService.getById(id);
+        return Result.success(setmealVO);
+    }
+
+    @PutMapping
+    public Result<String> update(@RequestBody SetmealDTO setmealDTO) {
+        setmealService.update(setmealDTO);
+        return Result.success();
+    }
 }

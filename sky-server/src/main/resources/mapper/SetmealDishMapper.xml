@@ -10,9 +10,9 @@
         </foreach>
     </insert>
     <delete id="deleteBatch">
-        delete from setmeal_dish where dish_id in
-        <foreach collection="dishIds" item="dishId" open="(" separator="," close=")">
-            #{dishId}
+        delete from setmeal_dish where setmeal_id in
+        <foreach collection="setmealIds" item="setmealId" open="(" separator="," close=")">
+            #{setmealId}
         </foreach>
     </delete>
 </mapper>
