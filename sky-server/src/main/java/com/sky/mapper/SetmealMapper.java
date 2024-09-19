@@ -22,4 +22,8 @@ public interface SetmealMapper {
 
     List<SetmealVO> page(SetmealPageQueryDTO setmealPageQueryDTO);
 
+    void deleteBatch(List<Long> ids);
+
+    @Select("select * from setmeal where id = #{id}")
+    Setmeal getById(Long id);
 }

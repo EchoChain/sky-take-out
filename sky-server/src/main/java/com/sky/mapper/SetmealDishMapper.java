@@ -20,4 +20,6 @@ public interface SetmealDishMapper {
 
     // 没有基础字段需要自动填充
     void insertBatch(List<SetmealDish> list);
+
+    void deleteBatch(List<Long> dishIds);
 }

@@ -6,6 +6,8 @@ import com.sky.entity.Setmeal;
 import com.sky.result.PageResult;
 import com.sky.vo.SetmealVO;
 
+import java.util.List;
+
 /**
  * @author Cheng Yihao
  * @version 1.0
@@ -15,4 +17,5 @@ import com.sky.vo.SetmealVO;
 public interface SetmealService {
     void save(SetmealDTO setmealDTO);
     PageResult<SetmealVO> page(SetmealPageQueryDTO setmealPageQueryDTO);
+    void deleteWithDish(List<Long> ids);
 }

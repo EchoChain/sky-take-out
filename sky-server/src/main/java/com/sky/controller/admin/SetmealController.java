@@ -10,6 +10,8 @@ import com.sky.vo.SetmealVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author Cheng Yihao
  * @version 1.0
@@ -32,5 +34,11 @@ public class SetmealController {
     public Result<PageResult<SetmealVO>> page(SetmealPageQueryDTO setmealPageQueryDTO) {
         PageResult<SetmealVO> page = setmealService.page(setmealPageQueryDTO);
         return Result.success(page);
+    }
+
+    @DeleteMapping
+    public Result<String> delete(@RequestParam List<Long> ids) {
+        setmealService.deleteWithDish(ids);
+        return Result.success();
     }
 }

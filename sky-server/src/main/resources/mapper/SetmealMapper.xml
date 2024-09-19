@@ -16,4 +16,10 @@
             <if test="status != null">and s.status = #{status}</if>
         </where>
     </select>
+    <delete id="deleteBatch">
+        delete from setmeal where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>
