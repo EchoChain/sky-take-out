@@ -2,6 +2,7 @@ package com.sky.handler;
 
 import com.sky.constant.MessageConstant;
 import com.sky.exception.BaseException;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.constant.ErrorConstant;
@@ -17,12 +18,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-
-    /**
-     * 捕获 SQL 相关异常
-     * @param ex
-     * @return
-     */
+    
     @ExceptionHandler(SQLException.class)
     public Result<String> sqlExceptionHandler(SQLException ex){
         log.error("SQL Exception: {}", ex.getMessage());
@@ -36,5 +32,11 @@ public class GlobalExceptionHandler {
         } else {
             return Result.error(MessageConstant.UNKNOWN_ERROR);
         }
+    }
+
+    @ExceptionHandler(com.sky.exception.DeletionNotAllowedException.class)
+    public Result<String> deletionNotAllowedExceptionHandler(DeletionNotAllowedException ex) {
+        log.error("DeletionNotAllowed Exception: {}", ex.getMessage());
+        return Result.error(ex.getMessage());
     }
 }
