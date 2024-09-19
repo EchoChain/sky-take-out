@@ -21,4 +21,8 @@ public interface DishMapper {
     void insert(Dish dish);
 
     List<DishVO> pageQuery(DishPageQueryDTO dishPageQueryDTO);
+
+    void deleteBatch(List<Long> ids);
+
+    Dish getById(Long id);
 }

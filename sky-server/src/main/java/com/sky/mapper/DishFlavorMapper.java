@@ -16,10 +16,7 @@ import java.util.List;
  */
 @Mapper
 public interface DishFlavorMapper {
-
-    /**
-     * 批量插入菜品口味
-     * @param dishFlavors
-     */
     void insertBatch(List<DishFlavor> dishFlavors);
+
+    void deleteBatch(List<Long> dishIds);
 }

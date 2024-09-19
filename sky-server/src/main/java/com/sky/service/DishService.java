@@ -6,6 +6,8 @@ import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.vo.DishVO;
 
+import java.util.List;
+
 /**
  * @author Cheng Yihao
  * @version 1.0
@@ -15,4 +17,5 @@ import com.sky.vo.DishVO;
 public interface DishService {
     void saveWithFlavor(DishDTO dishDTO);
     PageResult<DishVO> page(DishPageQueryDTO dishPageQueryDTO);
+    void deleteWithFlavor(List<Long> ids);
 }

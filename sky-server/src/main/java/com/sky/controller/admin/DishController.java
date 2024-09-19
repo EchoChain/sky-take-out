@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author Cheng Yihao
  * @version 1.0
@@ -39,5 +41,11 @@ public class DishController {
     public Result<PageResult<DishVO>> page(DishPageQueryDTO dishPageQueryDTO) {
         PageResult<DishVO> page = dishService.page(dishPageQueryDTO);
         return Result.success(page);
+    }
+
+    @DeleteMapping
+    public Result<String> delete(@RequestParam List<Long> ids) {
+        dishService.deleteWithFlavor(ids);
+        return Result.success();
     }
 }
