@@ -17,10 +17,10 @@
                 d.name like concat('%', #{name}, '%')
             </if>
             <if test="categoryId != null">
-                and category_id = #{categoryId}
+                and d.category_id = #{categoryId}
             </if>
             <if test="status != null">
-                and status = #{status}
+                and d.status = #{status}
             </if>
         </where>
     </select>
@@ -49,4 +49,8 @@
         </set>
         where id = #{id}
     </update>
+    <select id="getBySetmealId" resultType="com.sky.entity.Dish">
+        select d.* from dish d join setmeal_dish sd on d.id = sd.dish_id
+        where sd.setmeal_id = #{setmealId}
+    </select>
 </mapper>

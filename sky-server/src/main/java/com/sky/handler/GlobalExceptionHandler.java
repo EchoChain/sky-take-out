@@ -3,6 +3,7 @@ package com.sky.handler;
 import com.sky.constant.MessageConstant;
 import com.sky.exception.BaseException;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.exception.SetmealEnableFailedException;
 import com.sky.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.constant.ErrorConstant;
@@ -34,9 +35,15 @@ public class GlobalExceptionHandler {
         }
     }
 
-    @ExceptionHandler(com.sky.exception.DeletionNotAllowedException.class)
+    @ExceptionHandler(DeletionNotAllowedException.class)
     public Result<String> deletionNotAllowedExceptionHandler(DeletionNotAllowedException ex) {
         log.error("DeletionNotAllowed Exception: {}", ex.getMessage());
+        return Result.error(ex.getMessage());
+    }
+
+    @ExceptionHandler(SetmealEnableFailedException.class)
+    public Result<String> SetmealEnableFailedExceptionHandler(SetmealEnableFailedException ex) {
+        log.error("SetmealEnableFailed Exception: {}", ex.getMessage());
         return Result.error(ex.getMessage());
     }
 }
