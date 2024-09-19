@@ -71,7 +71,7 @@ public class DishServiceImpl implements DishService {
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
             Setmeal setmeal = setmealDishMapper.getByDishId(id);
             if (setmeal != null)
-                throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
+                throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         }
         dishMapper.deleteBatch(ids);
         dishFlavorMapper.deleteBatch(ids);
@@ -109,5 +109,13 @@ public class DishServiceImpl implements DishService {
     @Override
     public List<Dish> listByCategoryId(Long categoryId) {
         return dishMapper.listByCategoryId(categoryId);
+    }
+
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Dish dish = Dish.builder()
+                .id(id)
+                .status(status).build();
+        dishMapper.update(dish);
     }
 }
