@@ -1,5 +1,6 @@
 package com.sky.controller.user;
 
+import com.sky.constant.RedisKeyConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.result.Result;
 import io.swagger.annotations.Api;
@@ -33,7 +34,7 @@ public class ShopController {
     @ApiOperation("查询店铺的营业状态")
     public Result<Integer> getStatus() {
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-        Integer status = (Integer) valueOperations.get(KEY);
+        Integer status = (Integer) valueOperations.get(RedisKeyConstant.SHOP_STATUS);
         log.info("用户查询店铺状态为: {}", status == StatusConstant.ENABLE? "营业中" : "打烊中");
         return Result.success(status);
     }
