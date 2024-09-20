@@ -115,10 +115,15 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     public void startOrStop(Integer status, Long id) {
-        List<Dish> dishes = dishMapper.getBySetmealId(id);
-        for (Dish dish : dishes) {
-            if (dish.getStatus() == StatusConstant.DISABLE)
-                throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+        // The judgment is only needed if the state is DISABLE
+        if (status == StatusConstant.DISABLE) {
+            List<Dish> dishes = dishMapper.getBySetmealId(id);
+            if (dishes != null && !dishes.isEmpty()) {
+                for (Dish dish : dishes) {
+                    if (dish.getStatus() == StatusConstant.DISABLE)
+                        throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+                }
+            }
         }
         Setmeal setmeal = Setmeal.builder()
                 .id(id)
