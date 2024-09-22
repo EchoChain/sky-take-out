@@ -34,14 +34,25 @@ public class ShoppingCartController {
         return Result.success();
     }
 
-    @GetMapping("list")
+    @GetMapping("/list")
     @ApiOperation("查看购物车")
     public Result<List<ShoppingCart>> list() {
         List<ShoppingCart> shoppingCarts = shoppingCartService.list();
         return Result.success(shoppingCarts);
     }
 
-//    public Result<String> delete() {
-//
-//    }
+    @DeleteMapping("/clean")
+    public Result<String> clean() {
+        shoppingCartService.cleanShoppingCart();
+        return Result.success();
+    }
+
+    // Request URL: http://localhost:8080/user/shoppingCart/sub
+    // Request Method: POST
+    // dishFlavor: null dishId: 83 OR setmealId: 12  用 ShoppingCartDTO 承接
+    @PostMapping("/sub")
+    public Result<String> sub(@RequestBody ShoppingCartDTO shoppingCartDTO) {
+        shoppingCartService.subShoppingCart(shoppingCartDTO);
+        return Result.success();
+    }
 }
