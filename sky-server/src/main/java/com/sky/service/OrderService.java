@@ -34,4 +34,6 @@ public interface OrderService {
     PageResult<OrderVO> pageQuery(Integer page, Integer pageSize, Integer status);
 
     OrderVO getDetails(Long id);
+
+    void cancelByOrderId(Long id) throws Exception;
 }

@@ -204,4 +204,31 @@ public class OrderServiceImpl implements OrderService {
         vo.setOrderDetailList(details);
         return vo;
     }
+
+    @Override
+    public void cancelByOrderId(Long id) throws Exception {
+        Orders orderInDB = ordersMapper.getById(id);
+        if (orderInDB == null)
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        if (orderInDB.getStatus() > 2)
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+
+        /* 由于跳过了付款步骤 不执行退款
+        // 订单处于待接单状态下取消，需要进行退款
+        if (orderInDB.getStatus() == Orders.TO_BE_CONFIRMED) {
+            weChatPayUtil.refund(
+                    orderInDB.getNumber(), //商户订单号
+                    orderInDB.getNumber(), //商户退款单号
+                    new BigDecimal(0.01),//退款金额，单位 元
+                    new BigDecimal(0.01));//原订单金额
+        }*/
+
+        Orders orders = Orders.builder()
+                .id(id)
+                .status(Orders.CANCELLED)
+                .cancelTime(LocalDateTime.now())
+                .cancelReason("用户取消")
+                .build();
+        ordersMapper.update(orders);
+    }
 }
