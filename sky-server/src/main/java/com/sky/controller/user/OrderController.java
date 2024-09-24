@@ -50,4 +50,10 @@ public class OrderController {
         return Result.success(pageResult);
     }
 
+    @GetMapping("/orderDetail/{id}")
+    public Result<OrderVO> getDetails(@PathVariable Long id) {
+        OrderVO vo = orderService.getDetails(id);
+        return Result.success(vo);
+    }
+
 }

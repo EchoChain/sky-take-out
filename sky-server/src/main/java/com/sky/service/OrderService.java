@@ -32,4 +32,6 @@ public interface OrderService {
     void paySuccess(String outTradeNo);
 
     PageResult<OrderVO> pageQuery(Integer page, Integer pageSize, Integer status);
+
+    OrderVO getDetails(Long id);
 }

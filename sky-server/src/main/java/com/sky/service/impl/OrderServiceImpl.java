@@ -15,6 +15,7 @@ import com.sky.exception.OrderBusinessException;
 import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.*;
 import com.sky.result.PageResult;
+import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.service.ShoppingCartService;
 import com.sky.utils.WeChatPayUtil;
@@ -192,5 +193,15 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return new PageResult<OrderVO>(pageInfo.getTotal(), voList);
+    }
+
+    @Override
+    public OrderVO getDetails(Long id) {
+        Orders orders = ordersMapper.getById(id);
+        List<OrderDetail> details = orderDetailMapper.getByOrdersId(id);
+        OrderVO vo = new OrderVO();
+        BeanUtils.copyProperties(orders, vo);
+        vo.setOrderDetailList(details);
+        return vo;
     }
 }

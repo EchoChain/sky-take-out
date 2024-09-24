@@ -28,7 +28,7 @@ public class SetmealController {
     private SetmealService setmealService;
 
     @PostMapping
-    @CacheEvict(cacheNames = "setmealCache", key = "setmealDTO.id")
+    @CacheEvict(cacheNames = "setmealCache", key = "#setmealDTO.id")
     public Result<String> save(@RequestBody SetmealDTO setmealDTO) {
         setmealService.save(setmealDTO);
         return Result.success();
