@@ -62,4 +62,10 @@ public class OrderController {
         return Result.success();
     }
 
+    @PostMapping("/repetition/{id}")
+    public Result<String> repetition(@PathVariable Long id) {
+        orderService.repetition(id);
+        return Result.success();
+    }
+
 }

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sky.constant.MessageConstant;
-import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
@@ -15,14 +14,12 @@ import com.sky.exception.OrderBusinessException;
 import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.*;
 import com.sky.result.PageResult;
-import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.service.ShoppingCartService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -230,5 +227,18 @@ public class OrderServiceImpl implements OrderService {
                 .cancelReason("用户取消")
                 .build();
         ordersMapper.update(orders);
+    }
+
+    @Override
+    public void repetition(Long id) {
+        List<OrderDetail> details = orderDetailMapper.getByOrdersId(id);
+        for (OrderDetail detail : details) {
+            ShoppingCart shoppingCart = ShoppingCart.builder()
+                    .createTime(LocalDateTime.now())
+                    .userId(BaseContext.getCurrentId())
+                    .build();
+            BeanUtils.copyProperties(detail, shoppingCart, "id");  // 避免复制id
+            shoppingCartMapper.insert(shoppingCart);
+        }
     }
 }
