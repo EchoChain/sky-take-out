@@ -5,9 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.OrdersPaymentDTO;
-import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.*;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
@@ -54,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserMapper userMapper;
 
-    private Orders orders;
+    private Orders existedOrders;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -86,7 +84,7 @@ public class OrderServiceImpl implements OrderService {
         BeanUtils.copyProperties(ordersSubmitDTO, orders);
         // 插入 orders
         ordersMapper.insert(orders);
-        this.orders = orders;
+        this.existedOrders = orders;
 
         // 构造 details
         ArrayList<OrderDetail> details = new ArrayList<>();
@@ -144,7 +142,7 @@ public class OrderServiceImpl implements OrderService {
         Integer OrderPaidStatus = Orders.PAID;//支付状态，已支付
         Integer OrderStatus = Orders.TO_BE_CONFIRMED;  //订单状态，待接单
         LocalDateTime check_out_time = LocalDateTime.now();//更新支付时间
-        ordersMapper.updateStatus(OrderStatus, OrderPaidStatus, check_out_time, this.orders.getId());
+        ordersMapper.updateStatus(OrderStatus, OrderPaidStatus, check_out_time, this.existedOrders.getId());
         return vo;
     }
 
@@ -270,6 +268,44 @@ public class OrderServiceImpl implements OrderService {
                 .deliveryInProgress(ordersMapper.getNumbersByStatus(Orders.DELIVERY_IN_PROGRESS))
                 .build();
         return vo;
+    }
+
+    @Override
+    public void confirmById(OrdersConfirmDTO ordersConfirmDTO) {
+        Orders orders = Orders.builder()
+                .id(ordersConfirmDTO.getId())
+                .status(Orders.CONFIRMED)
+                .build();
+        ordersMapper.update(orders);
+    }
+
+    @Override
+    public void rejectionById(OrdersRejectionDTO ordersRejectionDTO) {
+        Orders ordersInDB = ordersMapper.getById(ordersRejectionDTO.getId());
+        if (ordersInDB == null)
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        if (!ordersInDB.getStatus().equals(Orders.TO_BE_CONFIRMED))
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+
+
+        /* 由于跳过了付款步骤 不执行退款
+        // 订单处于待接单状态下取消，需要进行退款
+        if (orderInDB.getStatus() == Orders.TO_BE_CONFIRMED) {
+            weChatPayUtil.refund(
+                    orderInDB.getNumber(), //商户订单号
+                    orderInDB.getNumber(), //商户退款单号
+                    new BigDecimal(0.01),//退款金额，单位 元
+                    new BigDecimal(0.01));//原订单金额
+        }*/
+
+        Orders orders = Orders.builder()
+                .id(ordersRejectionDTO.getId())
+                .status(Orders.CANCELLED)
+                .cancelReason("商家取消")
+                .cancelTime(LocalDateTime.now())
+                .rejectionReason(ordersRejectionDTO.getRejectionReason())
+                .build();
+        ordersMapper.update(orders);
     }
 
     public String getDetailsStr(List<OrderDetail> details) {

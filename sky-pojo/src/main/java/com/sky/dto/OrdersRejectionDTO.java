@@ -11,5 +11,4 @@ public class OrdersRejectionDTO implements Serializable {
 
     //订单拒绝原因
     private String rejectionReason;
-
 }
