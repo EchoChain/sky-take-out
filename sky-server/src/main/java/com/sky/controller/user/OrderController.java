@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2024/9/23 15:18
  * @comment
  */
-@RestController
+@RestController("userOrderController")
 @RequestMapping("//user/order")
 @Slf4j
 public class OrderController {

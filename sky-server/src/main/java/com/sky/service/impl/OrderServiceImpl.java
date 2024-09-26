@@ -18,6 +18,7 @@ import com.sky.service.OrderService;
 import com.sky.service.ShoppingCartService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +30,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Cheng Yihao
@@ -241,4 +241,45 @@ public class OrderServiceImpl implements OrderService {
             shoppingCartMapper.insert(shoppingCart);
         }
     }
+
+    @Override
+    public PageResult<OrderVO> conditionSearch(OrdersPageQueryDTO dto) {
+        PageHelper.startPage(dto.getPage(), dto.getPageSize());
+        List<Orders> ordersList = ordersMapper.page(dto);
+        ArrayList<OrderVO> voList = new ArrayList<>();
+        if (ordersList != null && !ordersList.isEmpty()) {
+            for (Orders order : ordersList) {
+                OrderVO vo = new OrderVO();
+                BeanUtils.copyProperties(order, vo);
+                List<OrderDetail> details = orderDetailMapper.getByOrdersId(order.getId());
+                vo.setOrderDetailList(details);
+                vo.setOrderDishes(getDetailsStr(details));
+                voList.add(vo);
+            }
+        }
+
+        PageInfo<Orders> pageInfo = new PageInfo<>(ordersList);
+        return new PageResult<>(pageInfo.getTotal(), voList);
+    }
+
+    @Override
+    public OrderStatisticsVO statistics() {
+        OrderStatisticsVO vo = OrderStatisticsVO.builder()
+                .toBeConfirmed(ordersMapper.getNumbersByStatus(Orders.TO_BE_CONFIRMED))
+                .confirmed(ordersMapper.getNumbersByStatus(Orders.CONFIRMED))
+                .deliveryInProgress(ordersMapper.getNumbersByStatus(Orders.DELIVERY_IN_PROGRESS))
+                .build();
+        return vo;
+    }
+
+    public String getDetailsStr(List<OrderDetail> details) {
+        StringBuilder builder = new StringBuilder();
+        for (OrderDetail detail : details) {
+            String name = detail.getName();
+            Integer number = detail.getNumber();
+            builder.append(name).append("*").append(number).append("; ");
+        }
+        return builder.toString();
+    }
+
 }

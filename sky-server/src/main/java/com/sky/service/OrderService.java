@@ -6,6 +6,7 @@ import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.Orders;
 import com.sky.result.PageResult;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 
@@ -18,17 +19,10 @@ import com.sky.vo.OrderVO;
 public interface OrderService {
     OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO);
 
-    /**
-     * 订单支付
-     * @param ordersPaymentDTO
-     * @return
-     */
+    // 订单支付
     OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception;
 
-    /**
-     * 支付成功，修改订单状态
-     * @param outTradeNo
-     */
+    // 支付成功 修改订单状态
     void paySuccess(String outTradeNo);
 
     PageResult<OrderVO> pageQuery(Integer page, Integer pageSize, Integer status);
@@ -38,4 +32,8 @@ public interface OrderService {
     void cancelByOrderId(Long id) throws Exception;
 
     void repetition(Long id);
+
+    PageResult<OrderVO> conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    OrderStatisticsVO statistics();
 }
