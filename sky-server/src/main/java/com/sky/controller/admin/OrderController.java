@@ -7,8 +7,10 @@ import com.sky.service.OrderService;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderVO;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +37,12 @@ public class OrderController {
     @ApiOperation("各个状态的订单数量统计")
     public Result<OrderStatisticsVO> statistics() {
         OrderStatisticsVO vo = orderService.statistics();
+        return Result.success(vo);
+    }
+
+    @GetMapping("/details/{id}")
+    public Result<OrderVO> getDetails(@PathVariable Long id) {
+        OrderVO vo = orderService.getDetails(id);
         return Result.success(vo);
     }
 }
