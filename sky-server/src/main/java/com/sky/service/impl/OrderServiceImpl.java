@@ -136,7 +136,7 @@ public class OrderServiceImpl implements OrderService {
         }*/
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code","ORDERPAID");
+        jsonObject.put("code", "ORDERPAID");
         OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
         vo.setPackageStr(jsonObject.getString("package"));
         Integer OrderPaidStatus = Orders.PAID;//支付状态，已支付
@@ -287,13 +287,11 @@ public class OrderServiceImpl implements OrderService {
         if (!ordersInDB.getStatus().equals(Orders.TO_BE_CONFIRMED))
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
 
-
         /* 由于跳过了付款步骤 不执行退款
-        // 订单处于待接单状态下取消，需要进行退款
-        if (orderInDB.getStatus() == Orders.TO_BE_CONFIRMED) {
+        if (ordersInDB.getPayStatus() == Orders.PAID) {
             weChatPayUtil.refund(
-                    orderInDB.getNumber(), //商户订单号
-                    orderInDB.getNumber(), //商户退款单号
+                    ordersInDB.getNumber(), //商户订单号
+                    ordersInDB.getNumber(), //商户退款单号
                     new BigDecimal(0.01),//退款金额，单位 元
                     new BigDecimal(0.01));//原订单金额
         }*/
@@ -301,9 +299,62 @@ public class OrderServiceImpl implements OrderService {
         Orders orders = Orders.builder()
                 .id(ordersRejectionDTO.getId())
                 .status(Orders.CANCELLED)
-                .cancelReason("商家取消")
                 .cancelTime(LocalDateTime.now())
                 .rejectionReason(ordersRejectionDTO.getRejectionReason())
+                .build();
+        ordersMapper.update(orders);
+    }
+
+    @Override
+    public void cancelById(OrdersCancelDTO ordersCancelDTO) {
+        Orders ordersInDB = ordersMapper.getById(ordersCancelDTO.getId());
+        if (ordersInDB == null)
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+
+        /* 由于跳过了付款步骤 不执行退款
+        if (ordersInDB.getPayStatus() == Orders.PAID) {
+            weChatPayUtil.refund(
+                    ordersInDB.getNumber(), //商户订单号
+                    ordersInDB.getNumber(), //商户退款单号
+                    new BigDecimal(0.01),//退款金额，单位 元
+                    new BigDecimal(0.01));//原订单金额
+        }*/
+
+        Orders orders = Orders.builder()
+                .id(ordersCancelDTO.getId())
+                .status(Orders.CANCELLED)
+                .cancelReason(ordersCancelDTO.getCancelReason())
+                .cancelTime(LocalDateTime.now())
+                .build();
+        ordersMapper.update(orders);
+    }
+
+    @Override
+    public void deliveryById(Long id) {
+        Orders ordersInDB = ordersMapper.getById(id);
+        if (ordersInDB == null)
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        if (!ordersInDB.getStatus().equals(Orders.CONFIRMED))
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+
+        Orders orders = Orders.builder()
+                .id(id)
+                .status(Orders.DELIVERY_IN_PROGRESS)
+                .build();
+        ordersMapper.update(orders);
+    }
+
+    @Override
+    public void completeById(Long id) {
+        Orders ordersInDB = ordersMapper.getById(id);
+        if (ordersInDB == null)
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        if (!ordersInDB.getStatus().equals(Orders.DELIVERY_IN_PROGRESS))
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+
+        Orders orders = Orders.builder()
+                .id(id)
+                .status(Orders.COMPLETED)
                 .build();
         ordersMapper.update(orders);
     }
