@@ -3,6 +3,7 @@ package com.sky.handler;
 import com.sky.constant.MessageConstant;
 import com.sky.exception.BaseException;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.exception.OrderBusinessException;
 import com.sky.exception.SetmealEnableFailedException;
 import com.sky.result.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SetmealEnableFailedException.class)
     public Result<String> SetmealEnableFailedExceptionHandler(SetmealEnableFailedException ex) {
         log.error("SetmealEnableFailed Exception: {}", ex.getMessage());
+        return Result.error(ex.getMessage());
+    }
+
+    @ExceptionHandler(OrderBusinessException.class)
+    public Result<String> orderBusinessExceptionHandler(OrderBusinessException ex) {
+        log.error("OrderBusinessException Exception: {}", ex.getMessage());
         return Result.error(ex.getMessage());
     }
 }
