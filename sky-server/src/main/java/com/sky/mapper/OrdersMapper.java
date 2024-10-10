@@ -53,4 +53,6 @@ public interface OrdersMapper {
     Double sumByMap(Map<String, Object> map);
 
     Integer countByTimeAndStatus(LocalDateTime beginTime, LocalDateTime endTime, Integer status);
+
+    Integer countByMap(Map map);
 }

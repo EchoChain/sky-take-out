@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * @author Cheng Yihao
@@ -30,4 +31,6 @@ public interface UserMapper {
     User getById(Long userId);
 
     Integer countByBeginAndEnd(LocalDateTime beginTime, LocalDateTime endTime);
+
+    Integer countByMap(Map map);
 }
