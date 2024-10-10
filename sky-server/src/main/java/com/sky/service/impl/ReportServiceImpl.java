@@ -1,13 +1,12 @@
 package com.sky.service.impl;
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.entity.Orders;
+import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrdersMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
-import com.sky.vo.OrderReportVO;
-import com.sky.vo.OrderStatisticsVO;
-import com.sky.vo.TurnoverReportVO;
-import com.sky.vo.UserReportVO;
+import com.sky.vo.*;
 import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +32,8 @@ public class ReportServiceImpl implements ReportService {
     private OrdersMapper ordersMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private OrderDetailMapper orderDetailMapper;
 
     @Override
     public TurnoverReportVO getTurnover(LocalDate begin, LocalDate end) {
@@ -126,6 +128,25 @@ public class ReportServiceImpl implements ReportService {
                 .totalOrderCount(totalOrderCount)
                 .validOrderCount(validOrderCount)
                 .orderCompletionRate(orderCompletionRate)
+                .build();
+    }
+
+    @Override
+    public SalesTop10ReportVO getTop10(LocalDate begin, LocalDate end) {
+        LocalDateTime beginTime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
+
+        List<GoodsSalesDTO> dtoList =  orderDetailMapper.countTop10(beginTime, endTime);
+        String nameList = StringUtils.join(
+                dtoList.stream().map(GoodsSalesDTO::getName).toList(),
+                ",");
+        String numberList = StringUtils.join(
+                dtoList.stream().map(GoodsSalesDTO::getNumber).toList(),
+                ",");
+
+        return SalesTop10ReportVO.builder()
+                .nameList(nameList)
+                .numberList(numberList)
                 .build();
     }
 }

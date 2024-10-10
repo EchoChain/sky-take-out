@@ -2,10 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.result.Result;
 import com.sky.service.ReportService;
-import com.sky.vo.OrderReportVO;
-import com.sky.vo.OrderStatisticsVO;
-import com.sky.vo.TurnoverReportVO;
-import com.sky.vo.UserReportVO;
+import com.sky.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +45,13 @@ public class ReportController {
     @ApiOperation("订单统计")
     public Result<OrderReportVO> ordersStatics(@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin, @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         OrderReportVO vo = reportService.getOrders(begin, end);
+        return Result.success(vo);
+    }
+
+    @GetMapping("/top10")
+    @ApiOperation("销量top10统计")
+    public Result<SalesTop10ReportVO> top10Statics(@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin, @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
+        SalesTop10ReportVO vo = reportService.getTop10(begin, end);
         return Result.success(vo);
     }
 }
