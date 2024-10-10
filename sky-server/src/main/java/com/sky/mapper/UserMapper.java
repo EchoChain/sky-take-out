@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Cheng Yihao
  * @version 1.0
@@ -26,4 +28,6 @@ public interface UserMapper {
 
     @Select("select * from user where id = #{userId}")
     User getById(Long userId);
+
+    Integer countByBeginAndEnd(LocalDateTime beginTime, LocalDateTime endTime);
 }

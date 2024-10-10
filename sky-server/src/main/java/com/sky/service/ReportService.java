@@ -1,6 +1,7 @@
 package com.sky.service;
 
 import com.sky.vo.TurnoverReportVO;
+import com.sky.vo.UserReportVO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,4 +14,6 @@ import java.time.LocalDateTime;
  */
 public interface ReportService {
     TurnoverReportVO getTurnover(LocalDate begin, LocalDate end);
+
+    UserReportVO getUser(LocalDate begin, LocalDate end);
 }
